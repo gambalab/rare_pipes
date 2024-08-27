@@ -1,0 +1,6 @@
+[submodule "Maverick"]
+	path = Maverick
+	url = https://github.com/ZuchnerLab/Maverick
+[submodule "CADA"]
+	path = CADA
+	url = https://github.com/Chengyao-Peng/CADA
