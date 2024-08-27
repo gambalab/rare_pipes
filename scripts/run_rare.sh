@@ -33,7 +33,7 @@ Help()
 {
    # Display Help
     echo "Run Maverick for GRCh38. It only uses CPUs for inference."
-    echo "Syntax: run_maverick.sh [h|i|o|s|m|a]"
+    echo "Syntax: run_rare.sh [h|i|o|s|m|a]"
         echo "options:"
         echo "-h     Print this Help."
         echo "-i     Input vcf file. (Required)"

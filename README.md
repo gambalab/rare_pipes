@@ -52,3 +52,25 @@ The pipeline begins by leveraging [snpEFF](https://pcingola.github.io/SnpEff/) a
 After filtering based on these criteria, the pipeline proceeds to analyze the selected mutations using Maverick. Finally, the results from Maverick are integrated with data collected from [OMIM](https://www.omim.org/) and [Orphanet](https://www.orpha.net/)databases.
 
 ## Example of use
+
+* **Input:**
+	* **Not annotated** VCF file produced by any variant caller like Deepvariant, GATK4, Octopus and so on.
+	* The absolute path to output folder where store the results.
+	* Sample Name.
+	* The absolute path to the reference FASTA file.
+	* The absolute path to Annovar.
+	* Optional bed file on which cut mutatins.
+
+* **Output:**
+	* Filtered vcf file used as input of Maverick.
+	* TSV file with scored variants.
+
+The pipeline is coded in the ```run_rare.sh``` script and can be run in the following way:
+
+```bash
+# Let's define a honey_pipe_exec variable to excec the several commands 
+RARE_exec="singularity exec --bind /usr/lib/locale/ path/to/rare_pipes_1.0.0.sif"
+
+# Let's see the help
+${RARE_exec} run_aln_short.sh -h
+```
