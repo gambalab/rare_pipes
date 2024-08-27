@@ -36,18 +36,21 @@ Help()
     echo "Syntax: run_maverick.sh [h|i|o|s|m|a]"
         echo "options:"
         echo "-h     Print this Help."
-        echo "-i     Input vcf file."
-        echo "-o     Output directory."
-        echo "-s     Sample name."
-        echo "-m     Model type, e.g. full or light. Default full."
-        echo "-a     Absolute path to Annovar."
+        echo "-i     Input vcf file. (Required)"
+        echo "-o     Output directory. (Required)"
+        echo "-s     Sample name. (Required)"
+        echo "-r     Absolute path to the reference FASTA file. (Required)"
+        echo "-a     Absolute path to Annovar. (Required)"
+        echo "-m     Model type, e.g. full or light. Default full. (Optional)"
+        echo "-b     Bed file of interested regions. (Optional)"
         echo
 }
 
 # A POSIX variable
 OPTIND=1         # Reset in case getopts has been used previously in the shell.
 MODEL="full"
-while getopts ":hi:o:s:a:" option; do
+BED_file=""
+while getopts ":hi:o:s:a:r:b:" option; do
    case $option in
       h) # display Help
          Help
@@ -71,6 +74,13 @@ while getopts ":hi:o:s:a:" option; do
          ANNOVAR_PATH=${OPTARG}
          ((count++))
          ;;
+      r)
+         REF_fasta=${OPTARG}
+         ((count++))
+         ;;
+      b)
+         BED_file=${OPTARG}
+         ;;
       :)
          print_error "Option -${OPTARG} requires an argument."
          exit 1
@@ -86,7 +96,7 @@ done
 if [[ ${count} == 0 ]]; then
    print_error "No arguments in input, please see the help (-h)"
    exit
-elif [[ ${count} -lt 4 ]]; then
+elif [[ ${count} -lt 5 ]]; then
       print_error "Missing some input arguments, please see the help (-h)"
       exit
 fi
@@ -104,9 +114,22 @@ export PATH=${ANNOVAR_PATH}:$PATH
 mkdir -p ${OUT_DIR}
 TMP_DIR=$(mktemp -d --tmpdir=${OUT_DIR})
 
+# Filter variants
+print_info "Filter Variants Step: Get putative mutations.."
+if [ "${BED_file}" != "" ]; then
+   opt_args="-b ${BED_file}" 
+fi
+filter_variants.sh \
+        -i ${fileName} \
+        -o ${OUT_DIR} \
+        -s ${SAMPLE} \
+        -r ${REF_fasta} ${opt_args}
+
+# update vcf filname
+fileName=${OUT_DIR}/${SAMPLE}.ontarget.annotated.dedup.filtered.vcf.gz
 
 # process variants with annovar
-print_info "Maverick Step 1: Get coding changes with Annovar.."
+print_info "Maverick Step 1/3: Get coding changes with Annovar.."
 # remove chr prefix if present
 if (file ${fileName} | grep -q gzip ) ; then
     zcat ${fileName} | sed 's/^chr//' > "${TMP_DIR}/${SAMPLE}.vcf"
@@ -133,7 +156,7 @@ coding_change.pl ${TMP_DIR}/${SAMPLE}.avinput.exonic_variant_function \
 				 > "${TMP_DIR}/${SAMPLE}.coding_changes.txt"
 
 # select transcript
-print_info "Maverick Step 2: Select transcript.."
+print_info "Maverick Step 2/4: Select transcript.."
 python Maverick/InferenceScripts/groomAnnovarOutput_GRCh38.py --inputBase=${TMP_DIR}/${SAMPLE}
 
 # if there are no scorable variants, end early
@@ -141,16 +164,16 @@ SCORABLEVARIANTS=$(cat ${TMP_DIR}/${SAMPLE}.groomed.txt | wc -l || true)
 if [[ ${SCORABLEVARIANTS} -lt 2 ]]; then print_error "No scorable variants found"; exit 0; fi
 
 # add on annotations
-print_info "Maverick Step 3: Merge on annotations.."
+print_info "Maverick Step 3/4: Merge on annotations.."
 python Maverick/InferenceScripts/annotateVariants_GRCh38.py --inputBase=${TMP_DIR}/${SAMPLE}
 
 # run variants through each of the models
 if [ "${MODEL}" == "full" ]; then
-	print_info "Maverick Step 4: Score variants with the 8 models .."
+	print_info "Maverick Step 4/4: Score variants with the 8 models .."
 	python Maverick/InferenceScripts/runModels_GRCh38.py --inputBase=${TMP_DIR}/${SAMPLE}
 	python Maverick/InferenceScripts/rankVariants_GRCh38.py --inputBase=${TMP_DIR}/${SAMPLE}
 else
-	print_info "Maverick Step 4: Score variants with architecture 1 model 1 only .."
+	print_info "Maverick Step 4/4: Score variants with architecture 1 model 1 only .."
 	python Maverick/InferenceScripts/runLiteModel_GRCh38.py --inputBase=${TMP_DIR}/${SAMPLE}
 	python Maverick/InferenceScripts/rankVariantsLite_GRCh38.py --inputBase=${TMP_DIR}/${SAMPLE}
 fi

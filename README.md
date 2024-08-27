@@ -4,11 +4,11 @@ va**R**iant p**A**thogenicity p**RE**diction pipelines
 A set easy-to-use, open source pipelines for prioritizing variants in Mendelian Diseases.
 
 ## Features
-This repository offers a comprehensive pipeline designed to annotate and prioritize variants associated with Mendelian diseases. The pipeline leverages two key components: [Maverick](https://github.com/ZuchnerLab/Maverick) and [CADA](https://github.com/Chengyao-Peng/CADA). The pipeline only **support only GRCh38** genome.
+This repository offers a comprehensive pipeline designed to annotate and prioritize variants associated with Mendelian diseases. The pipeline leverages two key components: [Maverick (Mendelian Approach to Variant Effect pRedICtion built in Keras)](https://github.com/ZuchnerLab/Maverick) and [CADA (Case Annotations and Disease Dnnotations)](https://github.com/Chengyao-Peng/CADA). The pipeline only **support only GRCh38** genome.
 
-Maverick (Mendelian Approach to Variant Effect pRedICtion built in Keras): Maverick is a state-of-the-art variant effect prediction model built using Keras. It employs transformer architectures to process a diverse set of input features, enabling it to accurately classify variants as benign, dominant pathogenic, or recessive pathogenic.
+* **Maverick:** Maverick is a state-of-the-art variant effect prediction model built using Keras. It employs transformer architectures to process a diverse set of input features, enabling it to accurately classify variants as benign, dominant pathogenic, or recessive pathogenic.
 
-CADA (Case Annotations and Disease Dnnotations): is a powerful tool for identifying disease-causing genes in rare syndromes. It integrates disease-level annotations from the Human Phenotype Ontology (HPO) with clinical case-level data to construct a gene-phenotype association network. By applying network representation learning techniques, CADA effectively prioritizes genes based on their likelihood of involvement in the disease.
+* **CADA**: is a powerful tool for identifying disease-causing genes in rare syndromes. It integrates disease-level annotations from the Human Phenotype Ontology (HPO) with clinical case-level data to construct a gene-phenotype association network. By applying network representation learning techniques, CADA effectively prioritizes genes based on their likelihood of involvement in the disease.
 
 The whole pipeline is into a single Singularity container named **rare_pipes**.
 
@@ -42,3 +42,13 @@ singularity pull docker://gambalab/rare_pipes:1.0.0
 docker pull gambalab/rare_pipes:1.0.0
  ```
 
+## Pipeline Overview
+The pipeline begins by leveraging [snpEFF](https://pcingola.github.io/SnpEff/) and [dbSNP 4.9](https://sites.google.com/site/jpopgen/dbNSFP) to identify a preliminary set of noteworthy mutations. Specifically, it focuses on the following criteria:
+
+* **SNPs:** Only coding SNPs with an allele frequency (AF) less than 0.05 and a damaging prediction score greater than 0.5 for at least one of the **Alpha Missense**, **EVE**, or **REVEL** predictors, or with an **ESM1b** prediction score less than -7.5, are retained.
+* **INDELs:** All INDELs are included.
+* **Stop Gain, Stop Loss, and Start Loss Variants:** These variants are also retained.
+
+After filtering based on these criteria, the pipeline proceeds to analyze the selected mutations using Maverick. Finally, the results from Maverick are integrated with data collected from [OMIM](https://www.omim.org/) and [Orphanet](https://www.orpha.net/)databases.
+
+## Example of use

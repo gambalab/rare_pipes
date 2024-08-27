@@ -201,4 +201,5 @@ tabix -p vcf "${OUT_folder}/${SAMPLE}.ontarget.annotated.dedup.filtered.vcf.gz"
 #tabix -p vcf "${OUT_folder}/${SAMPLE}.ontarget.annotated.dedup.filtered.Clinvar.vcf.gz"
 
 rm -rf ${TMP_DIR}
+conda deactivate
 print_info "DONE!!"
