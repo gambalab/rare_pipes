@@ -72,5 +72,27 @@ The pipeline is coded in the ```run_rare.sh``` script and can be run in the foll
 RARE_exec="singularity exec --bind /usr/lib/locale/ path/to/rare_pipes_1.0.0.sif"
 
 # Let's see the help
-${RARE_exec} run_aln_short.sh -h
+${RARE_exec} run_rare.sh -h
+```
+```bash
+Run RARE pipeline for GRCh38.
+Syntax: run_rare.sh [h|i|o|s|m|a]
+options:
+-h     Print this Help.
+-i     Input vcf file. (Required)
+-o     Output directory. (Required)
+-s     Sample name. (Required)
+-r     Absolute path to the reference FASTA file. (Required)
+-a     Absolute path to Annovar. (Required)
+-m     Model type, e.g. full or light. Default full. (Optional)
+```
+
+So a typical case of use will be something like this:
+```bash
+${RARE_exec} \
+    run_rare.sh \
+    -i /path/to/input/folder/with/vcf.gz \
+    -o /path/to/output_folder \
+    -s sample_name \
+    -r /path/to/reference.fa
 ```

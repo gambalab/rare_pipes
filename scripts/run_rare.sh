@@ -32,7 +32,7 @@ print_error(){
 Help()
 {
    # Display Help
-    echo "Run Maverick for GRCh38. It only uses CPUs for inference."
+    echo "Run RARE pipeline for GRCh38."
     echo "Syntax: run_rare.sh [h|i|o|s|m|a]"
         echo "options:"
         echo "-h     Print this Help."
