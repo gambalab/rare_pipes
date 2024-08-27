@@ -4,7 +4,7 @@ va**R**iant p**A**thogenicity p**RE**diction pipelines
 A set easy-to-use, open source pipelines for prioritizing variants in Mendelian Diseases.
 
 ## Features
-This repository offers a comprehensive pipeline designed to annotate and prioritize variants associated with Mendelian diseases. The pipeline leverages two key components: [Maverick (Mendelian Approach to Variant Effect pRedICtion built in Keras)](https://github.com/ZuchnerLab/Maverick) and [CADA (Case Annotations and Disease Dnnotations)](https://github.com/Chengyao-Peng/CADA). The pipeline only **support only GRCh38** genome.
+This repository offers a comprehensive pipeline designed to annotate and prioritize variants associated with Mendelian diseases. The pipeline leverages two key components: [Maverick (Mendelian Approach to Variant Effect pRedICtion built in Keras)](https://github.com/ZuchnerLab/Maverick) and [CADA (Case Annotations and Disease Annotations)](https://github.com/Chengyao-Peng/CADA). The pipeline only **support only GRCh38** genome.
 
 * **Maverick:** Maverick is a state-of-the-art variant effect prediction model built using Keras. It employs transformer architectures to process a diverse set of input features, enabling it to accurately classify variants as benign, dominant pathogenic, or recessive pathogenic.
 
