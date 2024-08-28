@@ -107,5 +107,7 @@ Rare pipes happily makes use of many open source packages. We would like to spec
 *	[Maverick](https://github.com/ZuchnerLab/Maverick)
 *	[CADA](https://github.com/Chengyao-Peng/CADA)
 *	[vcf2tsvpy](https://github.com/sigven/vcf2tsvpy)
+*	[snpEFF](https://pcingola.github.io/SnpEff/)
+*	[dbNSFP](https://sites.google.com/site/jpopgen/dbNSFP)
 
 We thank all of the developers and contributors to these packages for their work.
