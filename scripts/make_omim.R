@@ -1,9 +1,9 @@
-mimTitles = read.delim("~/src/rare_docker/data/mimTitles.txt",stringsAsFactors = F,skip = 2,header = T)
-genemap2 = read.delim("~/src/rare_docker/data/genemap2.txt",stringsAsFactors = F,skip = 3,header = T)
-morbidmap = read.delim("~/src/rare_docker/data/morbidmap.txt",stringsAsFactors = F,skip = 3,header = T)
+mimTitles = read.delim("~/src/rare_pipes/data/mimTitles.txt",stringsAsFactors = F,skip = 2,header = T)
+genemap2 = read.delim("~/src/rare_pipes/data/genemap2.txt",stringsAsFactors = F,skip = 3,header = T)
+morbidmap = read.delim("~/src/rare_pipes/data/morbidmap.txt",stringsAsFactors = F,skip = 3,header = T)
 
 
-mim2gene = read.delim("~/src/rare_docker/data/mim2gene.txt",stringsAsFactors = F,skip = 4,header = T)
+mim2gene = read.delim("~/src/rare_pipes/data/mim2gene.txt",stringsAsFactors = F,skip = 4,header = T)
 colnames(mim2gene) = c("OMIM.id","OMIM.entry","Entrez.id","Symbol","ENS.id")
 mim2gene = subset(mim2gene,ENS.id!="")
 
@@ -19,4 +19,4 @@ mim2gene$Phenotype = morbidmap$X..Phenotype[match(mim2gene$OMIM.id,morbidmap$MIM
 mim2gene = subset(mim2gene,!is.na(Phenotype))
 mim2gene = mim2gene[!duplicated(mim2gene$ENS.id),]
 
-saveRDS(mim2gene,"~/src/rare_docker/Rdata/omim.rds")
+saveRDS(mim2gene,"~/src/rare_pipes/Rdata/omim.rds")

@@ -59,4 +59,17 @@ RUN chmod +x /opt/picard/picard.jar
 # Copy Rdata
 COPY ./Rdata /opt/rare/Rdata
 
+# install CADA
+COPY ./CADA /opt/CADA
+WORKDIR /opt/CADA
+RUN conda create -y -n cada python=3.7 \
+        && conda init \
+        && . ~/.bashrc \
+        && conda activate cada \
+        && pip install -e . \
+        && conda deactivate \
+        && conda clean -a
+COPY ./scripts/prioritizing.py /opt/CADA/src/CADA/
+RUN chmod +x /opt/maverick/Maverick/InferenceScripts/add_CADA.R
+
 ENV PATH="${PATH}":/opt/maverick/Maverick/InferenceScripts/:/opt/snpEff/scripts/:opt/picard

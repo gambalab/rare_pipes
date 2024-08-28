@@ -43,6 +43,7 @@ Help()
         echo "-a     Absolute path to Annovar. (Required)"
         echo "-m     Model type, e.g. full or light. Default full. (Optional)"
         echo "-b     Bed file of interested regions. (Optional)"
+        echo "-p     A string of comma-separated HPO terms describing the patient, e.g. HP:0000573,HP:0001102,HP:0003115 (Optional)"
         echo
 }
 
@@ -50,7 +51,8 @@ Help()
 OPTIND=1         # Reset in case getopts has been used previously in the shell.
 MODEL="full"
 BED_file=""
-while getopts ":hi:o:s:a:r:b:" option; do
+HPO_terms=""
+while getopts ":hi:o:s:a:r:b:p:" option; do
    case $option in
       h) # display Help
          Help
@@ -80,6 +82,9 @@ while getopts ":hi:o:s:a:r:b:" option; do
          ;;
       b)
          BED_file=${OPTARG}
+         ;;
+      p)
+         HPO_terms=${OPTARG}
          ;;
       :)
          print_error "Option -${OPTARG} requires an argument."
@@ -182,6 +187,13 @@ print_info "Post process Maverick results.."
 conda activate bio
 vcf2tsvpy --input_vcf ${fileName} --out_tsv ${TMP_DIR}/${SAMPLE}.vcf.tsv
 postprocess_results.R  ${TMP_DIR}/${SAMPLE}.vcf.tsv ${TMP_DIR}/${SAMPLE}.finalScores.txt ${OUT_DIR}/${SAMPLE}.ranked.mutations.tsv
+
+if [ "${HPO_terms}" != "" ]; then
+   conda activate cada
+   CADA --out_dir ${TMP_DIR} --hpo_terms ${HPO_terms}
+   conda deactivate
+   add_CADA.R "${OUT_DIR}/${SAMPLE}.ranked.mutations.tsv" "${TMP_DIR}/result.txt" 
+fi
 
 rm -rf ${TMP_DIR}
 print_info "Done"

@@ -39,7 +39,7 @@ ensToSymbol = function(df,col,organism,verbose=T)
 
 
 # Download last version from https://www.orphadata.com/genes/
-data <- xml2::read_xml("~/src/rare_docker/data/en_product6.xml")
+data <- xml2::read_xml("~/src/rare_pipes/data/en_product6.xml")
 
 # Point locations
 point <- xml_find_all(x = data,xpath = "//Disorder")
