@@ -85,6 +85,7 @@ options:
 -r     Absolute path to the reference FASTA file. (Required)
 -a     Absolute path to Annovar. (Required)
 -m     Model type, e.g. full or light. Default full. (Optional)
+-p     A string of comma-separated HPO terms describing the patient, e.g. HP:0000573,HP:0001102,HP:0003115 (Optional)
 ```
 
 So a typical case of use will be something like this:
@@ -94,5 +95,17 @@ ${RARE_exec} \
     -i /path/to/input/folder/with/vcf.gz \
     -o /path/to/output_folder \
     -s sample_name \
-    -r /path/to/reference.fa
+    -r /path/to/reference.fa \
+    -p HP:0002354,HP:0000544
 ```
+
+## Acknowledgements
+Rare pipes happily makes use of many open source packages. We would like to specifically call out a few key ones:
+*	[bcftools](https://github.com/samtools/bcftools)
+*   [bedtools](https://github.com/arq5x/bedtools2)
+*	[tabix](https://github.com/samtools/tabix)
+*	[Maverick](https://github.com/ZuchnerLab/Maverick)
+*	[CADA](https://github.com/Chengyao-Peng/CADA)
+*	[vcf2tsvpy](https://github.com/sigven/vcf2tsvpy)
+
+We thank all of the developers and contributors to these packages for their work.
