@@ -128,8 +128,6 @@ Below you can find an explations of the most important columns in the ```${sampl
 *	**Symbol**: Gene symbol associated with the variant (if applicable).
 *	**AD**: Allelic depth for each allele (separated by commas).
 *	**DP**: Total read depth at the variant position.
-*	**MED_DP**: Median DP observed within the GVCF block rounded to the nearest integer..
-*	**MIN_DP**: Minimum DP observed within the GVCF block.
 *	**GQ**: Genotype quality score.
 *	**GT**: Genotype call for the sample (e.g., 0/1, 1/1).
 *	**PL**: Phred-scaled genotype likelihoods.
