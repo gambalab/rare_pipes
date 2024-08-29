@@ -23,7 +23,7 @@ df.rare$RARE.score = apply(cbind(df.rare$Maverick.Score,df.rare$CADA.score),MARG
 df.rare = df.rare[order(df.rare$RARE.score,decreasing = T),]
 
 cols = c("CHROM","POS","REF","ALT","QUAL","VarType","Symbol","AD","DP","MED_DP","MIN_DP","GQ","GT","PL","VAF","Maverick.Score","CADA.score","RARE.score","AlphaMissense","ESM1b","EVE","REVEL","Orphanet.id","Orphanet.Phenotype","Orphanet.inheritance","OMIM.id","OMIM.title","OMIM.Phenotype")
-df.rare = cbind(df.rare[,cols],df.rare[,!colnames(df.rare)%in%cols])
+df.rare = cbind(df.rare[,colnames(df.rare)%in%cols],df.rare[,!colnames(df.rare)%in%cols])
 
 write.table(df.rare,file = rare_res.path,quote = F,sep = "\t",row.names = F)
 
