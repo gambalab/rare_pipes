@@ -74,7 +74,7 @@ RARE_exec="singularity exec --bind /usr/lib/locale/ path/to/rare_pipes_1.0.0.sif
 # Let's see the help
 ${RARE_exec} run_rare.sh -h
 ```
-```bash
+```
 Run RARE pipeline for GRCh38.
 Syntax: run_rare.sh [h|i|o|s|m|a]
 options:
