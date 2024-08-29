@@ -51,12 +51,12 @@ The pipeline begins by leveraging [snpEFF](https://pcingola.github.io/SnpEff/) a
 * **INDELs:** All INDELs are included.
 * **Stop Gain, Stop Loss, and Start Loss Variants:** These variants are also retained.
 
-After filtering based on these criteria, the pipeline proceeds to analyze the selected mutations using Maverick. Finally, the results from Maverick are integrated with data collected from [OMIM](https://www.omim.org/) and [Orphanet](https://www.orpha.net/)databases.
+After filtering based on these criteria, the pipeline proceeds to analyze the selected mutations using Maverick. Finally, the results from Maverick are integrated with CADA results (if HPO codes are provided) and data collected from [OMIM](https://www.omim.org/) and [Orphanet](https://www.orpha.net/) databases.
 
 ## Example of use
 
 * **Input:**
-	* **Not annotated** VCF file produced by **Deepvariant** with gvcf flag enabled.
+	* **Not annotated** VCF file produced by **Deepvariant**. Althoug any other variant caller shuold also work.
 	* The absolute path to output folder where store the results.
 	* Sample Name.
 	* The absolute path to the reference FASTA file.
