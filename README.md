@@ -56,7 +56,7 @@ After filtering based on these criteria, the pipeline proceeds to analyze the se
 ## Example of use
 
 * **Input:**
-	* **Not annotated** VCF file produced by any variant caller like Deepvariant, GATK4, Octopus and so on.
+	* **Not annotated** VCF file produced by **Deepvariant** with gvcf flag enabled.
 	* The absolute path to output folder where store the results.
 	* Sample Name.
 	* The absolute path to the reference FASTA file.
@@ -128,8 +128,8 @@ Below you can find an explations of the most important columns in the ```${sampl
 *	**Symbol**: Gene symbol associated with the variant (if applicable).
 *	**AD**: Allelic depth for each allele (separated by commas).
 *	**DP**: Total read depth at the variant position.
-*	**MED_DP**: Median depth across all samples.
-*	**MIN_DP**: Minimum read depth across all samples.
+*	**MED_DP**: Median DP observed within the GVCF block rounded to the nearest integer..
+*	**MIN_DP**: Minimum DP observed within the GVCF block.
 *	**GQ**: Genotype quality score.
 *	**GT**: Genotype call for the sample (e.g., 0/1, 1/1).
 *	**PL**: Phred-scaled genotype likelihoods.
