@@ -4,7 +4,7 @@ va**R**iant p**A**thogenicity p**RE**diction pipelines
 A set easy-to-use, open source pipelines for prioritizing variants in Mendelian Diseases.
 
 ## Features
-This repository offers a comprehensive pipeline designed to annotate and prioritize variants associated with Mendelian diseases. The pipeline leverages two key components: [Maverick (Mendelian Approach to Variant Effect pRedICtion built in Keras)](https://github.com/ZuchnerLab/Maverick) and [CADA (Case Annotations and Disease Annotations)](https://github.com/Chengyao-Peng/CADA). The pipeline only **support only GRCh38** genome.
+This repository offers a comprehensive pipeline designed to annotate and prioritize variants associated with Mendelian diseases. The pipeline leverages two key components: [Maverick (Mendelian Approach to Variant Effect pRedICtion built in Keras)](https://github.com/ZuchnerLab/Maverick) and [CADA (Case Annotations and Disease Annotations)](https://github.com/Chengyao-Peng/CADA). The pipeline **support only GRCh38** genome.
 
 * **Maverick:** Maverick is a state-of-the-art variant effect prediction model built using Keras. It employs transformer architectures to process a diverse set of input features, enabling it to accurately classify variants as benign, dominant pathogenic, or recessive pathogenic.
 
@@ -98,6 +98,70 @@ ${RARE_exec} \
     -r /path/to/reference.fa \
     -p HP:0002354,HP:0000544
 ```
+
+## Pipeline Output Files:
+After the pipeline execution, results will be written to the /path/to/output_folder. You will find three primary files:
+
+* ```${sample_name}.UD_AN001_P.ontarget.annotated.dedup.filtered.vcf.gz```: The primary VCF file containing filtered, annotated, and deduplicated variants.
+* ```${sample_name}.UD_AN001_P.ontarget.annotated.dedup.filtered.vcf.gz.tbi```: The tabix index for the VCF file, enabling efficient querying.
+* ```${sample_name}.ranked.mutations.tsv```: A tab-separated file containing mutations ranked by pathogenicity score.
+
+**Mutation Ranking** in ```${sample_name}.ranked.mutations.tsv```:
+*	If HPO terms are provided: Mutations will be ranked according to the ```RARE.score``` column, which is the average of the ```Maverick.Score``` and ```CADA.score``` columns.
+*	If HPO terms are not provided: Mutations will be ranked solely by the ```Maverick.Score```.
+
+Below you can find an explations of the most important columns in the ```${sample_name}.ranked.mutations.tsv```
+
+**Core VCF Information**:
+*	**CHROM**: Chromosome on which the variant is located.
+*	**POS**: Base-pair position of the variant on the chromosome (1-based indexing).
+*	**REF**: Reference allele at the variant position.
+*	**ALT**: Alternative allele(s) at the variant position.
+*	**QUAL**: Phred-scaled quality score for the variant call.
+*	**VarType**: Type of variant (e.g., missense, stop gain ecc.).
+
+
+**Genotype Information**:
+*	**Symbol**: Gene symbol associated with the variant (if applicable).
+*	**AD**: Allelic depth for each allele (separated by commas).
+*	**DP**: Total read depth at the variant position.
+*	**MED_DP**: Median depth across all samples.
+*	**MIN_DP**: Minimum read depth across all samples.
+*	**GQ**: Genotype quality score.
+*	**GT**: Genotype call for the sample (e.g., 0/1, 1/1).
+*	**PL**: Phred-scaled genotype likelihoods.
+*	**VAF**: Variant Allele Frequency
+
+
+**Functional Impact Prediction**:
+*	**AlphaMissense**: Score for the predicted missense effect of the variant.
+*	**ESM1b**: Score for the predicted effect of with ESM.
+*	**EVE**: Evolutionary model of Variant Effect score.
+*	**REVEL**: Rare Exome Variant Ensemble Learner score.
+
+
+**Disease Association Annotations**:
+*	**Orphanet.id**: Orphanet identifier for a disease associated with the variant (if applicable).
+*	**Orphanet.Phenotype**: Orphanet disease phenotype associated with the variant (if applicable).
+*	**Orphanet.inheritance**: Orphanet inheritance mode for the associated disease (if applicable).
+*	**OMIM.id**: OMIM identifier for a Mendelian disease associated with the variant (if applicable).
+*	**OMIM.title**: Title of the associated OMIM disease.
+*	**OMIM.Phenotype**: OMIM disease phenotype associated with the variant (if applicable).
+*	**clinvar_MedGen_id**: MedGen identifier from ClinVar.
+*	**clinvar_OMIM_id**: OMIM identifier from ClinVar.
+*	**clinvar_Orphanet_id**: Orphanet identifier from ClinVar.
+*	**clinvar_clnsig**: Clinical significance classification from ClinVar.
+*	**clinvar_hgvs**: HGVS notation for the variant from ClinVar.
+*	**clinvar_id**: ClinVar accession identifier.
+*	**clinvar_review**: Review status of the variant in ClinVar.
+*	**clinvar_trait**: Associated trait(s) from ClinVar.
+*	**clinvar_var_source**: Source of the variant information in ClinVar.
+
+
+**GenomeAD annotation**:
+*	**gnomAD_exomes_AF**: Allele frequency in gnomAD exomes dataset.
+*	**gnomAD_genomes_AF**: Allele frequency in gnomAD genomes dataset.
+
 
 ## Acknowledgements
 Rare pipes happily makes use of many open source packages. We would like to specifically call out a few key ones:
