@@ -17,7 +17,9 @@ Prerequisite: Due to licensing restrictions, Annovar could not be directly inclu
 
 ```bash
 # Step 1: Download Annovar
-# Annovar executables are bound by both academic and commercial licenses, but can be downloaded (after registration) from https://www.openbioinformatics.org/annovar/annovar_download_form.php
+# Annovar executables are bound by both academic and commercial licenses,
+# but can be downloaded (after registration) from https://www.openbioinformatics.org/annovar/annovar_download_form.php
+#
 # Users must obtain their own licenses for use of Annovar and then move the release archive to the a directory of ypur choise. 
 
 # Step 2: Extract Annovar to a new annovar/ subdirectory.
