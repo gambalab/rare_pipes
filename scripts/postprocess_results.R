@@ -36,6 +36,7 @@ df.vcf.tsv$Symbol=sapply(strsplit(df.vcf.tsv$ANN,split = "|",fixed = T),function
 # Now merge orphanet and OMIM
 df.vcf.tsv$Orphanet.id = df.orphanet$Orphanet.id[match(df.vcf.tsv$Symbol,df.orphanet$Symbol)]
 df.vcf.tsv$Orphanet.Phenotype = df.orphanet$Phenotype[match(df.vcf.tsv$Symbol,df.orphanet$Symbol)]
+df.vcf.tsv$Orphanet.inheritance = df.orphanet$inheritance_type[match(df.vcf.tsv$Symbol,df.orphanet$Symbol)]
 df.vcf.tsv$OMIM.id = df.omim$OMIM.id[match(df.vcf.tsv$Symbol,df.omim$Symbol)]
 df.vcf.tsv$OMIM.title = df.omim$OMIM.title[match(df.vcf.tsv$Symbol,df.omim$Symbol)]
 df.vcf.tsv$OMIM.Phenotype = df.omim$Phenotype[match(df.vcf.tsv$Symbol,df.omim$Symbol)]
@@ -44,7 +45,7 @@ df.vcf.tsv$OMIM.Phenotype = df.omim$Phenotype[match(df.vcf.tsv$Symbol,df.omim$Sy
 df.vcf.tsv = df.vcf.tsv[order(df.vcf.tsv$Maverick.Score,decreasing = T),]
 
 # Order coloumns
-cols = c("CHROM","POS","REF","ALT","QUAL","VarType","Symbol","AD","DP","GQ","GT","VAF","AlphaMissense","ESM1b","EVE","REVEL","Maverick.Score","Orphanet.id","Orphanet.Phenotype","OMIM.id","OMIM.title","OMIM.Phenotype")
+cols = c("CHROM","POS","REF","ALT","QUAL","VarType","Symbol","AD","DP","GQ","GT","VAF","AlphaMissense","ESM1b","EVE","REVEL","Maverick.Score","Orphanet.id","Orphanet.Phenotype","Orphanet.inheritance","OMIM.id","OMIM.title","OMIM.Phenotype")
 df.vcf.tsv = cbind(df.vcf.tsv[,cols],df.vcf.tsv[,!colnames(df.vcf.tsv)%in%cols])
 
 # save the results

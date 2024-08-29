@@ -22,7 +22,7 @@ df.rare$CADA.score = df.dict$score[match(df.rare$Symbol,df.dict$symbol)]
 df.rare$RARE.score = apply(cbind(df.rare$Maverick.Score,df.rare$CADA.score),MARGIN = 1,function(x) mean(x,na.rm = T))
 df.rare = df.rare[order(df.rare$RARE.score,decreasing = T),]
 
-cols = c("CHROM","POS","REF","ALT","QUAL","VarType","Symbol","AD","DP","GQ","GT","VAF","Maverick.Score","CADA.score","RARE.score","AlphaMissense","ESM1b","EVE","REVEL","Orphanet.id","Orphanet.Phenotype","OMIM.id","OMIM.title","OMIM.Phenotype")
+cols = c("CHROM","POS","REF","ALT","QUAL","VarType","Symbol","AD","DP","GQ","GT","VAF","Maverick.Score","CADA.score","RARE.score","AlphaMissense","ESM1b","EVE","REVEL","Orphanet.id","Orphanet.Phenotype","Orphanet.inheritance","OMIM.id","OMIM.title","OMIM.Phenotype")
 df.rare = cbind(df.rare[,cols],df.rare[,!colnames(df.rare)%in%cols])
 
 write.table(df.rare,file = rare_res.path,quote = F,sep = "\t",row.names = F)
