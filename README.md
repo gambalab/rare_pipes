@@ -110,6 +110,7 @@ After the pipeline execution, results will be written to the /path/to/output_fol
 *	If HPO terms are provided: Mutations will be ranked according to the ```RARE.score``` column, which is the average of the ```Maverick.Score``` and ```CADA.score``` columns.
 *	If HPO terms are not provided: Mutations will be ranked solely by the ```Maverick.Score```.
 
+## Explanation of ```ranked.mutations.tsv``` file
 Below you can find an explations of the most important columns in the ```${sample_name}.ranked.mutations.tsv```
 
 **Core VCF Information**:
