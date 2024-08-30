@@ -187,11 +187,18 @@ print_info "Post process Maverick results.."
 conda activate bio
 vcf2tsvpy --input_vcf ${fileName} --out_tsv ${TMP_DIR}/${SAMPLE}.vcf.tsv
 postprocess_results.R  ${TMP_DIR}/${SAMPLE}.vcf.tsv ${TMP_DIR}/${SAMPLE}.finalScores.txt ${OUT_DIR}/${SAMPLE}.ranked.mutations.tsv
+conda deactivate
 
 if [ "${HPO_terms}" != "" ]; then
+   print_info "Running CADA .."
+   HPO_terms=$(clean_HPO.R ${HPO_terms})
+   print_info "Supported and Used HPO terms: ${HPO_terms}"
+
    conda activate cada
    CADA --out_dir ${TMP_DIR} --hpo_terms ${HPO_terms}
    conda deactivate
+   
+   print_info "Merging CADA results.."
    add_CADA.R "${OUT_DIR}/${SAMPLE}.ranked.mutations.tsv" "${TMP_DIR}/result.txt" 
 fi
 

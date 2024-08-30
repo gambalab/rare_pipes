@@ -71,5 +71,6 @@ RUN conda create -y -n cada python=3.7 \
         && conda clean -a
 COPY ./scripts/prioritizing.py /opt/CADA/src/CADA/
 RUN chmod +x /opt/maverick/Maverick/InferenceScripts/add_CADA.R
+RUN chmod +x /opt/maverick/Maverick/InferenceScripts/clean_HPO.R
 
 ENV PATH="${PATH}":/opt/maverick/Maverick/InferenceScripts/:/opt/snpEff/scripts/:opt/picard
