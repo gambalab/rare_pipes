@@ -46,7 +46,8 @@ df.vcf.tsv = df.vcf.tsv[order(df.vcf.tsv$Maverick.Score,decreasing = T),]
 
 # Order coloumns
 cols = c("CHROM","POS","REF","ALT","QUAL","VarType","Symbol","AD","DP","GQ","GT","PL","VAF","Maverick.Score","AlphaMissense","ESM1b","EVE","REVEL","Orphanet.id","Orphanet.Phenotype","Orphanet.inheritance","OMIM.id","OMIM.title","OMIM.Phenotype")
-df.vcf.tsv = cbind(df.vcf.tsv[,colnames(df.vcf.tsv)%in%cols],df.vcf.tsv[,!colnames(df.vcf.tsv)%in%cols])
+cols = cols[cols%in%colnames(df.vcf.tsv)]
+df.vcf.tsv = cbind(df.vcf.tsv[,cols],df.vcf.tsv[,!colnames(df.vcf.tsv)%in%cols])
 
 # save the results
 write.table(df.vcf.tsv,file = out.res.path,quote = F,sep = "\t",row.names = F)
