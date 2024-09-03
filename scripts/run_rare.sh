@@ -45,6 +45,7 @@ Help()
         echo "-b     Bed file of interested regions. (Optional)"
         echo "-p     A string of comma-separated HPO terms describing the patient, e.g. HP:0000573,HP:0001102,HP:0003115 (Optional)"
         echo "-d     Vcf file containing mutation to discard. Must be indexed. (Optional)"
+        echo "-t     Trio vcf file annotated with rtg tool. Must be indexed and sample name be contained into it. (Optional)"
         echo
 }
 
@@ -54,7 +55,8 @@ MODEL="full"
 BED_file=""
 HPO_terms=""
 VCF_population=""
-while getopts ":hi:o:s:a:r:b:p:d:" option; do
+VCF_trio=""
+while getopts ":hi:o:s:a:r:b:p:d:t:" option; do
    case $option in
       h) # display Help
          Help
@@ -90,6 +92,9 @@ while getopts ":hi:o:s:a:r:b:p:d:" option; do
          ;;
       d)
          VCF_population=${OPTARG}
+         ;;
+      t)
+         VCF_trio=${OPTARG}
          ;;
       :)
          print_error "Option -${OPTARG} requires an argument."
@@ -134,6 +139,9 @@ if [ "${VCF_population}" != "" ]; then
    opt_args="${opt_args} -d ${VCF_population}" 
 fi
 
+if [ "${VCF_trio}" != "" ]; then
+   opt_args="${opt_args} -t ${VCF_trio}" 
+fi
 
 filter_variants.sh \
         -i ${fileName} \
@@ -214,4 +222,4 @@ if [ "${HPO_terms}" != "" ]; then
 fi
 
 rm -rf ${TMP_DIR}
-print_info "Done"
+print_info "Variant Prioritization DONE"

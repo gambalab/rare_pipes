@@ -42,6 +42,7 @@ Help()
         echo "-r     Absolute path to the reference FASTA file. (Required)"
         echo "-b     Bed file of interested regions. (Optional)"
         echo "-d     Vcf file containing mutation to discard. Must be indexed. (Optional)"
+        echo "-t     Trio vcf file annotated with rtg tool. Must be indexed and sample name be contained into it. (Optional)"
         echo
 }
 
@@ -49,7 +50,8 @@ Help()
 OPTIND=1         # Reset in case getopts has been used previously in the shell.
 BED_file=""
 VCF_population=""
-while getopts ":hi:o:s:a:b:r:d:" option; do
+VCF_trio=""
+while getopts ":hi:o:s:a:b:r:d:t:" option; do
    case $option in
       h) # display Help
          Help
@@ -71,6 +73,9 @@ while getopts ":hi:o:s:a:b:r:d:" option; do
          ;;
       d)
          VCF_population=${OPTARG}
+         ;;
+      t)
+         VCF_trio=${OPTARG}
          ;;
       r)
          REF_fasta=${OPTARG}
@@ -208,6 +213,16 @@ ionice -c 3 bcftools concat -a \
         bgzip -c > "${OUT_folder}/${SAMPLE}.ontarget.annotated.dedup.filtered.vcf.gz"
 tabix -p vcf "${OUT_folder}/${SAMPLE}.ontarget.annotated.dedup.filtered.vcf.gz"
 
+if [ "${VCF_trio}" != "" ] && [ -f "${VCF_trio}" ]; then
+	print_info "Adding MCU,MCV info from family vcf.."
+	java -jar ${snpSIFT} annotate -noInfo -noId -info MCU,MCV ${VCF_trio} "${OUT_folder}/${SAMPLE}.ontarget.annotated.dedup.filtered.vcf.gz" | \
+		bgzip -c  > "${TMP_DIR}/${SAMPLE}.ontarget.annotated.dedup.filtered.vcf.gz"
+		mv "${TMP_DIR}/${SAMPLE}.ontarget.annotated.dedup.filtered.vcf.gz" "${OUT_folder}/${SAMPLE}.ontarget.annotated.dedup.filtered.vcf.gz"
+		tabix -f -p vcf "${OUT_folder}/${SAMPLE}.ontarget.annotated.dedup.filtered.vcf.gz" 
+else
+	print_error " Family VCF (-t) do not exist!"
+	exit
+fi
 
 #zcat ${TMP_DIR}/${SAMPLE}.ontarget.annotated.dedup.vcf.gz | \
 #	java -jar ${snpSIFT} filter "!(na dbNSFP_clinvar_id)" | \
@@ -216,4 +231,4 @@ tabix -p vcf "${OUT_folder}/${SAMPLE}.ontarget.annotated.dedup.filtered.vcf.gz"
 
 rm -rf ${TMP_DIR}
 conda deactivate
-print_info "DONE!!"
+print_info "VAariant Filtering DONE!!"
