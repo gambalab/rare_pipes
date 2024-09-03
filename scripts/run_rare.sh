@@ -44,6 +44,7 @@ Help()
         echo "-m     Model type, e.g. full or light. Default full. (Optional)"
         echo "-b     Bed file of interested regions. (Optional)"
         echo "-p     A string of comma-separated HPO terms describing the patient, e.g. HP:0000573,HP:0001102,HP:0003115 (Optional)"
+        echo "-d     Vcf file containing mutation to discard. Must be indexed. (Optional)"
         echo
 }
 
@@ -52,7 +53,8 @@ OPTIND=1         # Reset in case getopts has been used previously in the shell.
 MODEL="full"
 BED_file=""
 HPO_terms=""
-while getopts ":hi:o:s:a:r:b:p:" option; do
+VCF_population=""
+while getopts ":hi:o:s:a:r:b:p:d:" option; do
    case $option in
       h) # display Help
          Help
@@ -85,6 +87,9 @@ while getopts ":hi:o:s:a:r:b:p:" option; do
          ;;
       p)
          HPO_terms=${OPTARG}
+         ;;
+      d)
+         VCF_population=${OPTARG}
          ;;
       :)
          print_error "Option -${OPTARG} requires an argument."
@@ -124,6 +129,12 @@ print_info "Filter Variants Step: Get putative mutations.."
 if [ "${BED_file}" != "" ]; then
    opt_args="-b ${BED_file}" 
 fi
+
+if [ "${VCF_population}" != "" ]; then
+   opt_args="${opt_args} -d ${VCF_population}" 
+fi
+
+
 filter_variants.sh \
         -i ${fileName} \
         -o ${OUT_DIR} \

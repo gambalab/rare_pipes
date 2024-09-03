@@ -36,18 +36,20 @@ Help()
     echo "Syntax: filter_variants.sh [h|i|o|s|r|b]"
         echo "options:"
         echo "-h     Print this Help."
-        echo "-i     Path to the input vcf file. (Required)"
+        echo "-i     Path to the input vcf file. Must be indexed. (Required)"
         echo "-o     Output directory. (Required)"
         echo "-s     Sample name. (Required)"
         echo "-r     Absolute path to the reference FASTA file. (Required)"
         echo "-b     Bed file of interested regions. (Optional)"
+        echo "-d     Vcf file containing mutation to discard. Must be indexed. (Optional)"
         echo
 }
 
 
 OPTIND=1         # Reset in case getopts has been used previously in the shell.
 BED_file=""
-while getopts ":hi:o:s:a:b:r:" option; do
+VCF_population=""
+while getopts ":hi:o:s:a:b:r:d:" option; do
    case $option in
       h) # display Help
          Help
@@ -66,6 +68,9 @@ while getopts ":hi:o:s:a:b:r:" option; do
          ;;
       b)
          BED_file=${OPTARG}
+         ;;
+      d)
+         VCF_population=${OPTARG}
          ;;
       r)
          REF_fasta=${OPTARG}
@@ -103,6 +108,15 @@ dbNSFP=/opt/snpEff/data/dbNSFP4.9_small.txt.gz
 mkdir -p ${OUT_folder}
 TMP_DIR=$(mktemp -d --tmpdir=${OUT_folder})
 
+if [ "${VCF_population}" != "" ] && [ -f "${VCF_population}" ]; then
+	print_info "Filtering mutations using input VCF passed with -d"
+	bcftools isec -w 1 -C ${INPUT_VCF}  ${VCF_population} | bgzip -c  > ${TMP_DIR}/${SAMPLE}.tmp.vcf.gz
+	tabix -p vcf ${TMP_DIR}/${SAMPLE}.tmp.vcf.gz
+	INPUT_VCF=${TMP_DIR}/${SAMPLE}.tmp.vcf.gz
+else
+	print_error " Population VCF (-d) do not exist!"
+	exit
+fi
 
 if [ "${BED_file}" == "" ]; then
 	print_info "Starting Annotation (BED file not provided).."
