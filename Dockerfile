@@ -2,14 +2,43 @@
 # $ cd honey_pipes
 # $ sudo docker build -f ./Dockerfile -t gambalab/rare .
 
-# Stage miniconda envs
+# stage 1: build GLnexus
+FROM ubuntu:18.04 AS builder
+ENV LC_ALL=C.UTF-8
+ENV LANG=C.UTF-8
+ENV DEBIAN_FRONTEND=noninteractive
+ARG build_type=Release
+
+# dependencies
+RUN apt-get -qq update && \
+     apt-get -qq install -y --no-install-recommends --no-install-suggests \
+     curl wget ca-certificates git-core less netbase \
+     g++ cmake autoconf make file valgrind \
+     libjemalloc-dev libzip-dev libsnappy-dev libbz2-dev zlib1g-dev liblzma-dev libzstd-dev \
+     python3-pyvcf bcftools pv
+
+# Copy in the local source tree / build context
+ADD ./GLnexus /GLnexus
+WORKDIR /GLnexus
+
+# compile GLnexus
+RUN cmake -DCMAKE_BUILD_TYPE=$build_type . && make -j4
+
+# Stage 2: miniconda envs and tools
 FROM continuumio/miniconda3:latest AS base
+ENV LC_ALL=C.UTF-8
+ENV LANG=C.UTF-8
+ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
+    apt-get install -y --no-install-recommends --no-install-suggests \
         file \
         default-jre \
         wget \
+        libjemalloc2 \
+        bcftools \
+        tabix \
+        pv \
         littler && \
         apt-get autoremove && \
         apt-get clean && \
@@ -25,6 +54,7 @@ RUN conda create -y -n bio \
                     bioconda::tabix=0.2.6 \
                     bioconda::bedtools=2.31.1 \
                     bioconda::vcf2tsvpy=0.6.1 \
+                    bioconda::rtg-tools=3.12.1 \
                     && conda clean -a
 # Install Maverick
 RUN conda create -y -n maverick python=3.7 \
@@ -72,5 +102,11 @@ RUN conda create -y -n cada python=3.7 \
 COPY ./scripts/prioritizing.py /opt/CADA/src/CADA/
 RUN chmod +x /opt/maverick/Maverick/InferenceScripts/add_CADA.R
 RUN chmod +x /opt/maverick/Maverick/InferenceScripts/clean_HPO.R
+
+# Setup GLnexus
+ENV LD_PRELOAD=/usr/lib/x86_64-linux-gnu/libjemalloc.so.2
+COPY --from=builder /GLnexus/glnexus_cli /usr/local/bin/
+ADD https://github.com/mlin/spVCF/releases/download/v1.0.0/spvcf /usr/local/bin/
+RUN chmod +x /usr/local/bin/spvcf
 
 ENV PATH="${PATH}":/opt/maverick/Maverick/InferenceScripts/:/opt/snpEff/scripts/:opt/picard
