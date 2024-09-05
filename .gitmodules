@@ -4,3 +4,6 @@
 [submodule "CADA"]
 	path = CADA
 	url = https://github.com/Chengyao-Peng/CADA
+[submodule "GLnexus"]
+	path = GLnexus
+	url = https://github.com/dnanexus-rnd/GLnexus
