@@ -33,7 +33,7 @@ Help()
 {
    # Display Help
     echo "Run RARE pipeline for GRCh38."
-    echo "Syntax: run_rare.sh [h|i|o|s|m|a]"
+    echo "Syntax: run_rare.sh [h|i|o|s|r|a|m|b|p|d|t]"
         echo "options:"
         echo "-h     Print this Help."
         echo "-i     Input vcf file. (Required)"

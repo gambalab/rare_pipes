@@ -78,7 +78,7 @@ ${RARE_exec} run_rare.sh -h
 ```
 ```
 Run RARE pipeline for GRCh38.
-Syntax: run_rare.sh [h|i|o|s|m|a]
+Syntax: run_rare.sh [h|i|o|s|r|a|m|b|p|d|t]
 options:
 -h     Print this Help.
 -i     Input vcf file. (Required)
