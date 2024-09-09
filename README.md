@@ -88,6 +88,8 @@ options:
 -a     Absolute path to Annovar. (Required)
 -m     Model type, e.g. full or light. Default full. (Optional)
 -p     A string of comma-separated HPO terms describing the patient, e.g. HP:0000573,HP:0001102,HP:0003115 (Optional)
+-d     Vcf file containing mutation to discard. Must be indexed. (Optional)
+-t     Trio vcf file annotated with rtg tool. Must be indexed and sample name be contained into it. (Optional)
 ```
 
 So a typical case of use will be something like this:
